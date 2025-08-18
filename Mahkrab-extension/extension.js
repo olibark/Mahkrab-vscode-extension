@@ -4,6 +4,7 @@ const cp = require('child_process');
 const path = require('path');
 
 function activate(context) {
+  console.log("MahkrabMaker activated");
   // Reconfigure when you switch to a C file
   context.subscriptions.push(
     vscode.window.onDidChangeActiveTextEditor(ed => {
