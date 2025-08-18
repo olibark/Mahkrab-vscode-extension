@@ -7,13 +7,15 @@
   "activationEvents": ["onLanguage:c"],
   "main": "./extension.js",
 
-  "configuration": {
-    "title": "Mahkrab Maker",
-    "properties": {
-      "mahkrab.pythonPath": {
-        "type": "string",
-        "default": "python",
-        "description": "Interpreter to run main.py (e.g. python3, python, or full path)."
+  "contributes": {
+    "configuration": {
+      "title": "Mahkrab Maker",
+      "properties": {
+        "mahkrab.pythonPath": {
+          "type": "string",
+          "default": "python",
+          "description": "Interpreter to run main.py (e.g. python3, python, or full path)."
+        }
       }
     }
   }
