@@ -1,70 +1,83 @@
-"""import json
-import os
+#!/usr/bin/env python3
+import argparse, json, os, sys, platform, shlex
 
-def take_linker_flags(file_location):
-    flags = ''
-    with open(file_location, 'r') as src:
-        for line in src:
-            if not line.strip().startswith('#include'):
+# ---------- args ----------
+def parse_args():
+    p = argparse.ArgumentParser()
+    p.add_argument('--file', required=True)  # active C file (absolute from VS Code)
+    p.add_argument('--cwd',  required=True)  # workspace root
+    return p.parse_args()
+
+# ---------- headers -> linker flags ----------
+def take_linker_flags(file_location: str) -> str:
+    flags = []
+    with open(file_location, 'r', encoding='utf-8', errors='ignore') as src:
+        for raw in src:
+            line = raw.strip()
+            if not line.startswith('#include'):
                 continue
-            header = (line
-                      .replace('#include', '')
-                      .replace('<', '')
-                      .replace('>', '')
-                      .strip())
-            if header == 'SDL2/SDL.h':
-                flags += ' -lSDL2'
-            elif header == 'SDL2/SDL_image.h':
-                flags += ' -lSDL2_image'
-            elif header == 'SDL2/SDL_ttf.h':
-                flags += ' -lSDL2_ttf'
-            elif header == 'curl/curl.h':
-                flags += ' -lcurl'
-            elif header == 'jansson.h':
-                flags += ' -ljansson'
-            elif header == 'openssl/sha.h':
-                flags += ' -lssl -lcrypto'
-            elif header == 'gtk/gtk.h':
-                flags += ' `pkg-config --cflags --libs gtk+-3.0`'
-            elif header == 'zlib.h':
-                flags += ' -lz'
-            elif header == 'ncurses.h':
-                flags += ' -lncurses'
-    return flags
+            header = (line.replace('#include', '')
+                           .replace('<', '').replace('>', '')
+                           .replace('"', '').strip())
+            if header == 'SDL2/SDL.h':            flags.append('-lSDL2')
+            elif header == 'SDL2/SDL_image.h':    flags.append('-lSDL2_image')
+            elif header == 'SDL2/SDL_ttf.h':      flags.append('-lSDL2_ttf')
+            elif header == 'curl/curl.h':         flags.append('-lcurl')
+            elif header == 'jansson.h':           flags.append('-ljansson')
+            elif header == 'openssl/sha.h':       flags += ['-lssl', '-lcrypto']
+            elif header == 'gtk/gtk.h':           flags.append('$(pkg-config --cflags --libs gtk+-3.0)')
+            elif header == 'zlib.h':              flags.append('-lz')
+            elif header == 'ncurses.h':           flags.append('-lncurses')
+            elif header == 'math.h':              flags.append('-lm')
+            elif header == 'pthread.h':           flags.append('-pthread')
+    return ' ' + ' '.join(flags) if flags else ''
 
-def update_settings_json(c_command):
-    """"""
-    Load settings.json, update the C executorMap entry, and write it back.
-    """"""
-    settings_path = '/Library/Application Support/Code/User/settings.json'
-    with open(settings_path, 'r') as f:
-        settings = json.load(f)
-    # Update the C compile-and-run command using the naming convention
-    settings['code-runner.executorMap']['c'] = c_command
-    with open(settings_path, 'w') as f:
-        json.dump(settings, f, indent=4)
+# ---------- build command ----------
+def make_command(active_file: str, cwd: str, flags: str):
+    # compiler choice: clang on macOS (cc), gcc elsewhere; allow $CC override
+    cc = os.environ.get('CC') or ('cc' if platform.system().lower().startswith('darwin') else 'gcc')
 
+    name      = os.path.splitext(os.path.basename(active_file))[0]
+    build_dir = os.path.join(cwd, 'build')
+    exe_path  = os.path.join(build_dir, name)
+    if platform.system().lower().startswith('win'):
+        exe_path += '.exe'
+
+    # shell-safe quoting
+    q_cwd       = shlex.quote(cwd)
+    q_build_dir = shlex.quote(build_dir)
+    q_src       = shlex.quote(active_file)
+    q_exe       = shlex.quote(exe_path)
+
+    compile_cmd = f'{cc} -O0 -g {q_src} -o {q_exe}{flags}'
+    run_cmd     = q_exe if platform.system().lower().startswith('win') \
+                 else f'./{shlex.quote(os.path.relpath(exe_path, cwd))}'
+    full_cmd    = f'cd {q_cwd} && mkdir -p {q_build_dir} && {compile_cmd} && {run_cmd}'
+    return compile_cmd, run_cmd, full_cmd
+
+# ---------- main ----------
 if __name__ == '__main__':
-    # Path to the source file; you could also take this from argv
-    source_file = input("Enter the path to the C source file: ")
-    # Compute linker flags based on dependencies
-    linker_flags = take_linker_flags(source_file)
-    # Build the compile-and-run command using placeholders
-    compile_and_run = (
-        f"cd $dir && mkdir -p build && "
-        f"gcc $fileName -o build/$fileNameWithoutExt{linker_flags} && "
-        f"./build/$fileNameWithoutExt"
-    )
-    # Update the JSON configuration
-    update_settings_json(compile_and_run)
-    print("Compile and run command:")
-    print(compile_and_run)"""
-    
-    
-# main.py (temporary)
-import argparse, json
-p = argparse.ArgumentParser()
-p.add_argument('--file', required=True)
-p.add_argument('--cwd', required=True)
-_ = p.parse_args()
-print(json.dumps({"full": "echo Hello from MahkrabMaker"}))
+    args = parse_args()
+
+    # resolve & validate paths
+    active_file = os.path.abspath(os.path.expanduser(args.file))
+    cwd         = os.path.abspath(os.path.expanduser(args.cwd))
+
+    if not os.path.exists(active_file):
+        print(f'ERROR: file not found: {active_file}', file=sys.stderr)
+        sys.exit(2)
+    if not os.path.isdir(cwd):
+        print(f'ERROR: cwd not a directory: {cwd}', file=sys.stderr)
+        sys.exit(2)
+
+    flags = take_linker_flags(active_file)
+    compile_cmd, run_cmd, full_cmd = make_command(active_file, cwd, flags)
+
+    # <<< THIS is what your extension reads >>>
+    print(json.dumps({
+        "compile": compile_cmd,
+        "run": run_cmd,
+        "full": full_cmd
+        }
+    )  
+)
