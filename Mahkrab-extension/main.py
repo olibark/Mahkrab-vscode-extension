@@ -79,3 +79,4 @@ activeFile, workingDir = findFile()
 print(f"Active file: {activeFile}")
 print(f"Working directory: {workingDir}")
 
+print(json.dumps({"full": "echo Hello from MahkrabMaker!!!"}))
