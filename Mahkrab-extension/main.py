@@ -84,3 +84,4 @@ if __name__ == '__main__':
     compileCmd, runCmd, fullCmd = makeCommand(activeFile, cwd, flags)
 
     print(json.dumps({"compile": compileCmd, "run": runCmd, "full": fullCmd}))
+
