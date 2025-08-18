@@ -1,0 +1,12 @@
+node_modules/**
+npm-debug.log
+.vscode/**
+*.code-workspace
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+out/**
+dist/**
+.git/**
+.gitignore
