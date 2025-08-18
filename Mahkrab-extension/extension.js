@@ -5,22 +5,30 @@ const path = require('path');
 
 function activate(context) {
   console.log("MahkrabMaker activated");
+
   // Reconfigure when you switch to a C file
   context.subscriptions.push(
     vscode.window.onDidChangeActiveTextEditor(ed => {
-      if (isC(ed?.document)) { void configure(); }
+      if (isC(ed?.document)) {
+        console.log("MahkrabMaker: active editor changed to C file");
+        void configure();
+      }
     })
   );
 
   // Reconfigure when you save a C file
   context.subscriptions.push(
     vscode.workspace.onDidSaveTextDocument(doc => {
-      if (isC(doc)) { void configure(); }
+      if (isC(doc)) {
+        console.log("MahkrabMaker: C file saved");
+        void configure();
+      }
     })
   );
 
   // Configure immediately if the current editor is a C file
   if (isC(vscode.window.activeTextEditor?.document)) {
+    console.log("MahkrabMaker: initial configure on activation (C file already active)");
     void configure();
   }
 }
@@ -32,7 +40,10 @@ function isC(doc) {
 
 async function configure() {
   const ed = vscode.window.activeTextEditor;
-  if (!ed || !isC(ed.document)) return;
+  if (!ed || !isC(ed.document)) {
+    console.log("MahkrabMaker: configure skipped (no active C editor)");
+    return;
+  }
 
   const doc = ed.document;
   const ws = vscode.workspace.getWorkspaceFolder(doc.uri);
@@ -45,13 +56,24 @@ async function configure() {
   // main.py sits next to this file
   const scriptPath = path.join(__dirname, 'main.py');
 
-  // Run Python to get { full: "compile && run" }
+  // DEBUG: show what we’re about to run
+  console.log("MahkrabMaker: preparing to call Python");
+  console.log("  python     =", python);
+  console.log("  scriptPath =", scriptPath);
+  console.log("  activeFile =", doc.fileName);
+  console.log("  cwd        =", cwd);
+
   let out;
   try {
     out = cp.spawnSync(python, [scriptPath, '--file', doc.fileName, '--cwd', cwd], {
       cwd,
       encoding: 'utf8'
     });
+
+    // DEBUG: show what Python returned
+    console.log("MahkrabMaker: python stdout:", out.stdout);
+    console.log("MahkrabMaker: python stderr:", out.stderr);
+    console.log("MahkrabMaker: python status:", out.status);
   } catch (e) {
     return vscode.window.showErrorMessage(`MahkrabMaker: failed to start Python (${python}): ${e.message}`);
   }
@@ -68,9 +90,12 @@ async function configure() {
   try {
     payload = JSON.parse(out.stdout);
   } catch (e) {
-    return vscode.window.showErrorMessage(
-      `MahkrabMaker: main.py did not return valid JSON: ${e.message}\nSTDOUT:\n${out.stdout}`
+    vscode.window.showErrorMessage(
+      `MahkrabMaker: main.py did not return valid JSON: ${e.message}`
     );
+    // Extra debug toast so it's obvious during dev
+    vscode.window.showInformationMessage('MahkrabMaker: check "Extension Host" output for stdout/stderr details.');
+    return;
   }
 
   const full = String(payload?.full || '').trim();
@@ -90,6 +115,7 @@ async function configure() {
   try {
     await codeRunner.update('executorMap', updated, target);
     await codeRunner.update('runInTerminal', true, target);
+    console.log("MahkrabMaker: Code Runner executorMap.c updated");
     vscode.window.showInformationMessage('MahkrabMaker: Code Runner command updated for C.');
   } catch (e) {
     vscode.window.showErrorMessage(`MahkrabMaker: failed to update Code Runner settings: ${e.message}`);

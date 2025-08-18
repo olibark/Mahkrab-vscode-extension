@@ -1,21 +1,20 @@
 {
-    "name": "mahkrab-maker",
-    "displayName": "MahkrabMaker",
-    "version": "0.0.1",
-    "publisher": "olibark",
-    "engines": {
-        "vscode": "^1.85.0"
-    },
-    "activationEvents": ["onLanguage:c"],
-    "main": "./extension.js",
-    "configuration": {
-        "title": "Mahkrab Maker",
-        "properties": {
-            "mahkrab.pythonPath": {
-                "type": "string",
-                "default": "python",
-                "description": "Interpreter to run main.py (e.g. python, python3, or full path)."
-            }
-        }
+  "name": "mahkrab-maker",
+  "displayName": "MahkrabMaker",
+  "version": "0.0.1",
+  "publisher": "olibark",
+  "engines": { "vscode": "^1.85.0" },
+  "activationEvents": ["onLanguage:c"],
+  "main": "./extension.js",
+
+  "configuration": {
+    "title": "Mahkrab Maker",
+    "properties": {
+      "mahkrab.pythonPath": {
+        "type": "string",
+        "default": "python",
+        "description": "Interpreter to run main.py (e.g. python3, python, or full path)."
+      }
     }
+  }
 }
