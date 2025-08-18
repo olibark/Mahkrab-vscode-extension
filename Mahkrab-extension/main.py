@@ -61,22 +61,10 @@ if __name__ == '__main__':
     print(compile_and_run)"""
     
     
-import json, os
-import argparse as ap
-
-def findFile():
-    parser = ap.ArgumentParser()
-    parser.add_argument('--file', required = True)
-    parser.add_argument('--cwd', required = True)
-    args = parser.parse_args()
-    
-    activeFile = args.file
-    workingDir = args.cwd
-    
-    return activeFile, workingDir
-
-activeFile, workingDir = findFile()
-print(f"Active file: {activeFile}")
-print(f"Working directory: {workingDir}")
-
-print(json.dumps({"full": "echo Hello from MahkrabMaker!!!"}))
+# main.py (temporary)
+import argparse, json
+p = argparse.ArgumentParser()
+p.add_argument('--file', required=True)
+p.add_argument('--cwd', required=True)
+_ = p.parse_args()
+print(json.dumps({"full": "echo Hello from MahkrabMaker"}))
