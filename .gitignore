@@ -30,7 +30,7 @@ build/
 # Ignore macOS and editor specific files
 .DS_Store
 .idea/
-.vscode/
+
 
 # Ignore coverage and test output
 coverage.xml
