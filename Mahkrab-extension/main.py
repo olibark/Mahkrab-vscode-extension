@@ -30,6 +30,16 @@ def take_linker_flags(file_location: str) -> str:
             elif header == 'ncurses.h':           flags.append('-lncurses')
             elif header == 'math.h':              flags.append('-lm')
             elif header == 'pthread.h':           flags.append('-pthread')
+            elif header == 'unistd.h':            flags.append('-lutil')
+            elif header == 'sys/socket.h':        flags.append('-lsocket')
+            elif header == 'sys/types.h':         flags.append('-lutil')
+            elif header == 'sys/stat.h':          flags.append('-lstat')
+            elif header == 'sys/time.h':          flags.append('-lrt')
+            elif header == 'sys/ioctl.h':         flags.append('-lutil')
+            elif header in ('SDL2_gfxPrimitives.h', 'SDL2/SDL2_gfxPrimitives.h'):
+                flags.append('-lSDL2_gfx')
+    flags.append('-lSDL2_gfx')
+
     return ' ' + ' '.join(flags) if flags else ''
 
 # ---------- build command ----------
