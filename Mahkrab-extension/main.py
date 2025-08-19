@@ -78,6 +78,7 @@ def findDependencies(fileLocation: str) -> str:
                 elif header == 'png++/png.hpp':       flags.append('-lpng')  # header-only wrapper, still needs libpng
                 elif header == 'math.h':              flags.append('-lm')
                 elif header == 'pthread.h':           flags.append('-pthread')
+    
     except FileNotFoundError:
         return ''
     return ' ' + ' '.join(flags) if flags else ''
