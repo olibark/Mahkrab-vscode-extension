@@ -8,8 +8,8 @@ function activate(context) {
 
   // Reconfigure when you switch to a C file
   context.subscriptions.push(
-    vscode.window.onDidChangeActiveTextEditor(ed => {
-      if (isC(ed?.document)) {
+    vscode.window.onDidChangeActiveTextEditor(activeFile => {
+      if (isC(activeFile?.document)) {
         console.log("MahkrabMaker: active editor changed to C file");
         void configure();
       }
@@ -39,13 +39,13 @@ function isC(doc) {
 }
 
 async function configure() {
-  const ed = vscode.window.activeTextEditor;
-  if (!ed || !isC(ed.document)) {
+  const activeFile = vscode.window.activeTextEditor;
+  if (!activeFile || !isC(activeFile.document)) {
     console.log("MahkrabMaker: configure skipped (no active C editor)");
     return;
   }
 
-  const doc = ed.document;
+  const doc = activeFile.document;
   const ws = vscode.workspace.getWorkspaceFolder(doc.uri);
   const cwd = ws ? ws.uri.fsPath : path.dirname(doc.fileName);
 
