@@ -69,19 +69,18 @@ def makeCommand(activeFile: str, cwd: str, flags: str):
     fullCommand = f'cd {safeCwd} && mkdir -p {safeBuildDir} && {compileCommand} && {runCommand}'
     return compileCommand, runCommand, fullCommand
 
-if __name__ == '__main__':
-    args = parseArgs()
+args = parseArgs()
 
-    activeFile = os.path.abspath(os.path.expanduser(args.file))
-    cwd = os.path.abspath(os.path.expanduser(args.cwd))
+activeFile = os.path.abspath(os.path.expanduser(args.file))
+cwd = os.path.abspath(os.path.expanduser(args.cwd))
 
-    if not os.path.exists(activeFile):
-        print(f'ERROR: file not found: {activeFile}', file=sys.stderr); sys.exit(2)
-    if not os.path.isdir(cwd):
-        print(f'ERROR: cwd not a directory: {cwd}', file=sys.stderr); sys.exit(2)
+if not os.path.exists(activeFile):
+    print(f'ERROR: file not found: {activeFile}', file=sys.stderr); sys.exit(2)
+if not os.path.isdir(cwd):
+    print(f'ERROR: cwd not a directory: {cwd}', file=sys.stderr); sys.exit(2)
 
-    flags = findDependencies(activeFile)
-    compileCmd, runCmd, fullCmd = makeCommand(activeFile, cwd, flags)
+flags = findDependencies(activeFile)
+compileCmd, runCmd, fullCmd = makeCommand(activeFile, cwd, flags)
 
-    print(json.dumps({"compile": compileCmd, "run": runCmd, "full": fullCmd}))
+print(json.dumps({"compile": compileCmd, "run": runCmd, "full": fullCmd}))
 
