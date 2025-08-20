@@ -1,21 +1,22 @@
-//makes sure that user has these "requirements"
-const vscode = require('vscode'); 
+// extension.js
+const vscode = require('vscode');
 const cp = require('child_process');
 const path = require('path');
 
 function activate(context) {
   console.log("MahkrabMaker activated");
-  // Reconfigures when focus is switched to a C file
+
+  // Reconfigure when you switch to a C file
   context.subscriptions.push(
     vscode.window.onDidChangeActiveTextEditor(activeFile => {
-      if (isC(activeFile?.document)) { // uses isC function to fdind whether current file is c
+      if (isC(activeFile?.document)) {
         console.log("MahkrabMaker: active editor changed to C file");
         void configure();
       }
     })
   );
 
-  // Reconfigure when saving a cfile to local
+  // Reconfigure when you save a C file
   context.subscriptions.push(
     vscode.workspace.onDidSaveTextDocument(doc => {
       if (isC(doc)) {
@@ -31,15 +32,14 @@ function activate(context) {
     void configure();
   }
 }
-//returns a bool if file is c and has .c extension from the doc
+
 function isC(doc) {
   if (!doc) return false;
   return doc.languageId === 'c' || doc.fileName?.endsWith('.c');
 }
-//uses async (and await) to allow btoh processes to run simultanously(asyncronous)
+
 async function configure() {
   const activeFile = vscode.window.activeTextEditor;
-  //if file is not c then configure is not called for this cycle
   if (!activeFile || !isC(activeFile.document)) {
     console.log("MahkrabMaker: configure skipped (no active C editor)");
     return;
@@ -49,19 +49,20 @@ async function configure() {
   const ws = vscode.workspace.getWorkspaceFolder(doc.uri);
   const cwd = ws ? ws.uri.fsPath : path.dirname(doc.fileName);
 
-  //reads the setting in the extension for where python is installed/or command to access(e.g. python, python3, users/bin/python)
+  // Read interpreter setting
   const cfg = vscode.workspace.getConfiguration('mahkrab');
   const python = cfg.get('pythonPath') || 'python';
 
-  //finds where to run the "main.py" file from
+  // main.py sits next to this file
   const scriptPath = path.join(__dirname, 'main.py');
 
-  //debugging locatinos necessary for extension
-  console.log("MahkrabMaker: preparing to call Python: ");
+  // DEBUG: show what we’re about to run
+  console.log("MahkrabMaker: preparing to call Python");
   console.log("  python     =", python);
   console.log("  scriptPath =", scriptPath);
   console.log("  activeFile =", doc.fileName);
   console.log("  cwd        =", cwd);
+
   let out;
   try {
     out = cp.spawnSync(python, [scriptPath, '--file', doc.fileName, '--cwd', cwd], {
@@ -70,14 +71,9 @@ async function configure() {
     });
 
     // DEBUG: show what Python returned
-    console.log("MahkrabMaker: python stdout:\n\n\n", out.stdout);
-    console.log("\n\nMahkrabMaker: python stderr:", out.stderr);
-    if (out.status == 0) {
-      console.log("MahkrabMaker: python status: good")
-    }
-    else {
-      console.log("MahkrabMaker: python status: error")
-    }
+    console.log("MahkrabMaker: python stdout:", out.stdout);
+    console.log("MahkrabMaker: python stderr:", out.stderr);
+    console.log("MahkrabMaker: python status:", out.status);
   } catch (e) {
     return vscode.window.showErrorMessage(`MahkrabMaker: failed to start Python (${python}): ${e.message}`);
   }
@@ -89,6 +85,7 @@ async function configure() {
     const stderr = (out.stderr || '').trim();
     return vscode.window.showErrorMessage(`MahkrabMaker: main.py exited with ${out.status}${stderr ? `\n${stderr}` : ''}`);
   }
+
   let payload;
   try {
     payload = JSON.parse(out.stdout);

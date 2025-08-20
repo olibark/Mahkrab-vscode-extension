@@ -1,0 +1,48 @@
+{
+  "$schema": "vscode://schemas/vscode-extensions",
+  "name": "mahkrab-maker",
+  "displayName": "MahkrabMaker",
+  "version": "0.0.1",
+  "publisher": "olibark",
+  "engines": { "vscode": "^1.85.0" },
+  "activationEvents": [
+    "onLanguage:c",
+    "onCommand:mahkrab.runOnFile"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Mahkrab Maker",
+      "properties": {
+        "mahkrab.pythonPath": {
+          "type": "string",
+          "default": "python",
+          "description": "Interpreter to run main.py (e.g. python3, python, or full path)."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "mahkrab.runOnFile",
+        "title": "Mahkrab: Run on File",
+        "category": "Mahkrab"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "mahkrab.runOnFile",
+          "group": "navigation@9",
+          "when": "resourceLangId == c"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "mahkrab.runOnFile",
+          "group": "navigation@9",
+          "when": "editorLangId == c"
+        }
+      ]
+    }
+  }
+}
