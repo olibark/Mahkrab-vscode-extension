@@ -69,7 +69,7 @@ async function configure() {
       encoding: 'utf8'
     });
 
-    // DEBUG: show what Python returned
+    //shows the returned output, error, and status
     console.log("MahkrabMaker: python stdout:\n\n\n", out.stdout);
     console.log("\n\nMahkrabMaker: python stderr:", out.stderr);
     if (out.status == 0) {
@@ -96,7 +96,6 @@ async function configure() {
     vscode.window.showErrorMessage(
       `MahkrabMaker: main.py did not return valid JSON: ${e.message}`
     );
-    // Extra debug toast so it's obvious during dev
     vscode.window.showInformationMessage('MahkrabMaker: check "Extension Host" output for stdout/stderr details.');
     return;
   }
@@ -106,7 +105,7 @@ async function configure() {
     return vscode.window.showErrorMessage('MahkrabMaker: main.py did not include a "full" command.');
   }
 
-  // Update Code Runner settings
+  //update code runner settings
   const codeRunner = vscode.workspace.getConfiguration('code-runner');
   const current = codeRunner.get('executorMap') || {};
   const updated = { ...current, c: full };
