@@ -1,12 +1,17 @@
 {
+  "$schema": "vscode://schemas/vscode-extensions",
   "name": "mahkrab-maker",
   "displayName": "MahkrabMaker",
+  "description": "Mahkrab helper for C files using a Python backend.",
   "version": "0.0.1",
   "publisher": "olibark",
-  "engines": { "vscode": "^1.85.0" },
-  "activationEvents": ["onLanguage:c"],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "activationEvents": [
+    "onLanguage:c"
+  ],
   "main": "./extension.js",
-
   "contributes": {
     "configuration": {
       "title": "Mahkrab Maker",
