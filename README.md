@@ -9,9 +9,9 @@ Visual-studio-code extension to create `"compile and run"` `("CAR")` commands fo
 >>* File will be read for dependencies which are recognised in the extensions library (will be updated over time).
 >* Any dependencies that are found by the extension will then be linked to the `"CAR"` command.
 >* extension then links with the `"Code Runner"` extension to configure the `"code-runner.executorMap"` in the user's `settings.json` file:
-    ```
+```
     "code-runner.executorMap": {
         "c": "cd $dir && mkdir -p build && gcc $fileName -o build/$fileNameWithoutExt -lncurses && ./build/$fileNameWithoutExt"
     }
-
+```
 >*  Now, when user presses the run button (top right), or the shortcut, usually `ctrl + option + N`, the current `C` file will be run with the dependencies needed added to the `"CAR"` command.
