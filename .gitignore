@@ -51,3 +51,4 @@ Thumbs.db__pycache__/
 .DS_Store
 .idea/
 Shooter/Shooter.zip
+*.vsix
