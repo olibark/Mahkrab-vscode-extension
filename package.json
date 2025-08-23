@@ -5,6 +5,7 @@
   "description": "Mahkrab helper for C files using a Python backend.",
   "version": "0.0.1",
   "publisher": "olibark",
+  "icon": "images/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/olibark/Mahkrab-vscode-extension.git"
