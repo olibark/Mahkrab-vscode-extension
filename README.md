@@ -18,9 +18,4 @@ Visual-studio-code extension to create `"compile and run"` `("CAR")` commands fo
 
 ## Example:
 
-<video width="" height="350" controls>
-  <source src="video.mp4" type="video/mp4">
-</video>
-
-[🎬 Watch the demo](video.mp4)
-
+![Demo](images/demo.gif)
