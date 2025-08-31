@@ -10,3 +10,4 @@ out/**
 dist/**
 .git/**
 .gitignore
+*.vsix
