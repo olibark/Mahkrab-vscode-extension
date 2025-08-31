@@ -19,3 +19,8 @@ Visual-studio-code extension to create `"compile and run"` `("CAR")` commands fo
 ## Example:
 
 ![Demo](images/demo.gif)
+
+
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/olibark.mahkrab-maker.svg)](https://marketplace.visualstudio.com/items?itemName=olibark.mahkrab-maker)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/olibark.mahkrab-maker.svg)](https://marketplace.visualstudio.com/items?itemName=olibark.mahkrab-maker)
+[![Rating](https://img.shields.io/visual-studio-marketplace/stars/olibark.mahkrab-maker.svg)](https://marketplace.visualstudio.com/items?itemName=olibark.mahkrab-maker&ssr=false#review-details)
