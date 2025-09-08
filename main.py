@@ -75,7 +75,7 @@ def findDependencies(fileLocation: str) -> str:
                 elif header == 'hidapi/hidapi.h':     flags.append('-lhidapi')
                 elif header == 'bluetooth/bluetooth.h': flags.append('-lbluetooth')
                 elif header == 'X11/Xlib.h':          flags.append('-lX11')
-                elif header == 'png++/png.hpp':       flags.append('-lpng')  # header-only wrapper, still needs libpng
+                elif header == 'png++/png.hpp':       flags.append('-lpng')
                 elif header == 'math.h':              flags.append('-lm')
                 elif header == 'pthread.h':           flags.append('-pthread')
     
