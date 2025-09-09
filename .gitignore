@@ -1,9 +1,6 @@
-# Ignore Python bytecode and cache directories
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Ignore compiled C/C++ object files and binaries
 *.o
 *.obj
 *.so
@@ -11,41 +8,23 @@ __pycache__/
 *.dylib
 *.exe
 *.out
-
-# Ignore build artifacts
 build/
 */build/
-
-# Ignore package distribution directories
 /dist/
 *.egg-info/
 .eggs/
-
-# Ignore logs and temporary files
 *.log
 *.tmp
 *.swp
 *~
-
-# Ignore macOS and editor specific files
 .DS_Store
 .idea/
-
-
-# Ignore coverage and test output
 coverage.xml
 *.cover
-
-
-# Ignore virtual environments
 venv/
 ENV/
 .env
-
-# Ignore Node modules
 node_modules/
-
-# Misc
 Thumbs.db__pycache__/
 *.pyc
 .DS_Store
