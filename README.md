@@ -16,7 +16,7 @@ Visual-studio-code extension to create `"compile and run"` `("CAR")` commands fo
 ```
 >*  Now, when user presses the run button (top right), or the shortcut, usually `ctrl + option + N`, the current `C` file will be run with the dependencies needed added to the `"CAR"` command.
 
-## ExampleL:
+## Example:
 
 ![Demo](images/demo.gif)
 
