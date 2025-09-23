@@ -3,7 +3,7 @@
   "name": "mahkrab-maker",
   "displayName": "MahkrabMaker",
   "description": "Mahkrab helper for C files using a Python backend.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "olibark",
   "icon": "images/icon.png",
   "repository": {
