@@ -1,0 +1,10 @@
+PS C:\Users\olive\Documents\Programs\ALEVEL> cd "C:\Users\olive\Documents\Programs"
+PS C:\Users\olive\Documents\Programs> cd 'c:\Users\olive\Documents\Programs\ALEVEL' ; if ($?) { if not exist 'c:\Users\olive\Documents\Programs\ALEVEL\build' mkdir 'c:\Users\olive\Documents\Programs\ALEVEL\build' } ; if ($?) { gcc 'c:\Users\olive\Documents\Programs\ALEVEL\test.c' -o 'c:\Users\olive\Documents\Programs\ALEVEL\build\test.exe' } ; if ($?) { 'c:\Users\olive\Documents\Programs\ALEVEL\build\test.exe' } "c:\Users\olive\Documents\Programs\ALEVEL\test.c"
+At line:1 char:61
++ cd 'c:\Users\olive\Documents\Programs\ALEVEL' ; if ($?) { if not exis ...
++                                                             ~
+Missing '(' after 'if' in if statement.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingOpenParenthesisInIfStatement
+ 
+PS C:\Users\olive\Documents\Programs> 
