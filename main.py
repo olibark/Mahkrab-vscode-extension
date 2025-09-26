@@ -99,13 +99,12 @@ def makeCommand(activeFile: str, cwd: str, flags: str):
     safeCwd, safeBuildDir, safeSrc, safeExe = shlexSafety(cwd, buildDir, activeFile, executePath)
     compileCommand = f'{compiler} {safeSrc} -o {safeExe}{flags}'
     # Use a script block to swallow extra args in PowerShell
-    runCommand = f'& {{ {safeExe} }}' if platform.system().lower().startswith('win') else f'./{shlex.quote(os.path.relpath(executePath, cwd))}'
+    runCommand = f'& {safeExe}' if platform.system().lower().startswith('win') else f'./{shlex.quote(os.path.relpath(executePath, cwd))}'
     is_powershell = 'pwsh' in os.environ.get('SHELL', '').lower() or 'powershell' in os.environ.get('COMSPEC', '').lower() or 'PSModulePath' in os.environ
     if platform.system().lower().startswith('win'):
         if is_powershell:
             mkdir_cmd = f"if (!(Test-Path {safeBuildDir})) {{ mkdir {safeBuildDir} }}"
-            # Use script block to swallow extra args
-            fullCommand = f"cd {safeCwd}; {mkdir_cmd}; {compileCommand}; & {{ {safeExe} }}"
+            fullCommand = f"cd {safeCwd}; {mkdir_cmd}; {compileCommand}; {runCommand}"
         else:
             mkdir_cmd = f'if not exist {safeBuildDir} mkdir {safeBuildDir}'
             fullCommand = f'cd {safeCwd} && {mkdir_cmd} && {compileCommand} && {safeExe}'
