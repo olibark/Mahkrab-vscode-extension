@@ -110,7 +110,7 @@ def makeCommand(activeFile: str, cwd: str, flags: str):
     if platform.system().lower().startswith('win'):
         if is_powershell:
             mkdir_cmd = f"if (!(Test-Path {safeBuildDir})) {{ mkdir {safeBuildDir} }}"
-            fullCommand = f"cd {safeCwd}; {mkdir_cmd}; {compileCommand}; {runCommand}"
+            fullCommand = f"cd {safeCwd}; {mkdir_cmd}; {compileCommand}; --% {runCommand}"
         else:
             mkdir_cmd = f'if not exist {safeBuildDir} mkdir {safeBuildDir}'
             fullCommand = f'cd {safeCwd} && {mkdir_cmd} && {compileCommand} && {runCommand}'
@@ -134,4 +134,3 @@ flags = findDependencies(activeFile)
 compileCmd, runCmd, fullCmd = makeCommand(activeFile, cwd, flags)
 
 print(json.dumps({"compile": compileCmd, "run": runCmd, "full": fullCmd}))
-
