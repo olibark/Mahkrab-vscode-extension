@@ -104,7 +104,14 @@ def makeCommand(activeFile: str, cwd: str, flags: str):
     compileCommand = f'{compiler} {safeSrc} -o {safeExe}{flags}'
     runCommand = safeExe if platform.system().lower().startswith('win') \
         else f'./{shlex.quote(os.path.relpath(executePath, cwd))}'
-    fullCommand = f'cd {safeCwd} && mkdir -p {safeBuildDir} && {compileCommand} && {runCommand}'
+        
+    if platform.system().lower().startswith('win'):
+        mkdir_cmd = f'if not exist {safeBuildDir} mkdir {safeBuildDir}'
+        fullCommand = f'cd {safeCwd} && {mkdir_cmd} && {compileCommand} && {runCommand}'
+    else:
+        mkdir_cmd = f'mkdir -p {safeBuildDir}'
+        fullCommand = f'cd {safeCwd} && {mkdir_cmd} && {compileCommand} && {runCommand}'
+    
     return compileCommand, runCommand, fullCommand
 
 args = parseArgs()
