@@ -1,46 +1,14 @@
 PS C:\Users\olive\Documents\Programs\ALEVEL> cd "C:\Users\olive\Documents\Programs"
-PS C:\Users\olive\Documents\Programs> cd 'c:\Users\olive\Documents\Programs\ALEVEL' ; if ($?) { mkdir -p 'c:\Users\olive\Documents\Programs\ALEVEL\build' } ; if ($?) { gcc 'c:\Users\olive\Documents\Programs\ALEVEL\test.c' -o 'c:\Users\olive\Documents\Programs\ALEVEL\build\test.exe' } ; if ($?) { 'c:\Users\olive\Documents\Programs\ALEVEL\build\test.exe' } "c:\Users\olive\Documents\Programs\ALEVEL\test.c"
-mkdir : An item with the specified name C:\Users\olive\Documents\Programs\ALEVEL\build already exists.
-At line:1 char:59
-+ ... ; if ($?) { mkdir -p 'c:\Users\olive\Documents\Programs\ALEVEL\build' ...
-+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : ResourceExists: (C:\Users\olive\...ms\ALEVEL\build:String) [New-Item], I 
-   OException
-    + FullyQualifiedErrorId : DirectoryExist,Microsoft.PowerShell.Commands.NewItemCommand
+PS C:\Users\olive\Documents\Programs> cd 'c:\Users\olive\Documents\Programs\ALEVEL'; if (!(Test-Path 'c:\Users\olive\Documents\Programs\ALEVEL\build')) { mkdir 'c:\Users\olive\Documents\Programs\ALEVEL\build' }; gcc 'c:\Users\olive\Documents\Programs\ALEVEL\test.c' -o 'c:\Users\olive\Documents\Programs\ALEVEL\build\test.exe'; --% 'c:\Users\olive\Documents\Programs\ALEVEL\build\test.exe' "c:\Users\olive\Documents\Programs\ALEVEL\test.c"
+At line:1 char:293
++ ... 'c:\Users\olive\Documents\Programs\ALEVEL\build\test.exe'; --% 'c:\Us ...
++                                                                  ~
+Missing expression after unary operator '--'.
+At line:1 char:353
++ ... VEL\build\test.exe' "c:\Users\olive\Documents\Programs\ALEVEL\test.c"
++                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Unexpected token '"c:\Users\olive\Documents\Programs\ALEVEL\test.c"' in expression or statement.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingExpressionAfterOperator
  
-c:\Users\olive\Documents\Programs\ALEVEL\test.c
-PS C:\Users\olive\Documents\Programs\ALEVEL> 
-
-
-
-MahkrabMaker activated
-extensionHostProcess.js:205
-MahkrabMaker: initial configure on activation (C file already active)
-extensionHostProcess.js:205
-MahkrabMaker: preparing to call Python: 
-extensionHostProcess.js:205
-  python     = python3
-extensionHostProcess.js:205
-  scriptPath = c:\Users\olive\Documents\Programs\Mahkrab-vscode-extension\main.py
-extensionHostProcess.js:205
-  activeFile = c:\Users\olive\Documents\Programs\ALEVEL\test.c
-extensionHostProcess.js:205
-  cwd        = c:\Users\olive\Documents\Programs\ALEVEL
-extensionHostProcess.js:205
-MahkrabMaker: python stdout:
-extensionHostProcess.js:205
-2
-
-extensionHostProcess.js:205
- {"compile": "gcc 'c:\\Users\\olive\\Documents\\Programs\\ALEVEL\\test.c' -o 'c:\\Users\\olive\\Documents\\Programs\\ALEVEL\\build\\test.exe'", "run": "'c:\\Users\\olive\\Documents\\Programs\\ALEVEL\\build\\test.exe'", "full": "cd 'c:\\Users\\olive\\Documents\\Programs\\ALEVEL'; if (!(Test-Path 'c:\\Users\\olive\\Documents\\Programs\\ALEVEL\\build')) { mkdir 'c:\\Users\\olive\\Documents\\Programs\\ALEVEL\\build' }; gcc 'c:\\Users\\olive\\Documents\\Programs\\ALEVEL\\test.c' -o 'c:\\Users\\olive\\Documents\\Programs\\ALEVEL\\build\\test.exe'; --% 'c:\\Users\\olive\\Documents\\Programs\\ALEVEL\\build\\test.exe'"}
-extensionHostProcess.js:205
-3
-
-extensionHostProcess.js:205
-MahkrabMaker: python stderr: 
-extensionHostProcess.js:205
-MahkrabMaker: python status: good
-extensionHostProcess.js:205
-MahkrabMaker: Code Runner executorMap.c updated
-extensionHostProcess.js:205
-Redundant folding ranges request received for: file:///c%3A/Users/olive/Documents/Programs/ALEVEL/test.c
+PS C:\Users\olive\Documents\Programs> 
