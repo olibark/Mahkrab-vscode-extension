@@ -5,8 +5,8 @@ import shlex
 
 def parseArgs():
     p = ap.ArgumentParser()
-    p.add_argument('--file', required=True)  # path to active C file
-    p.add_argument('--cwd',  required=True)  # workspace root
+    p.add_argument('--file', required=True)
+    p.add_argument('--cwd',  required=True)
     return p.parse_args()
 
 def findDependencies(fileLocation: str) -> str:
@@ -78,7 +78,6 @@ def findDependencies(fileLocation: str) -> str:
                 elif header == 'png++/png.hpp':       flags.append('-lpng')
                 elif header == 'math.h':              flags.append('-lm')
                 elif header == 'pthread.h':           flags.append('-pthread')
-    
     except FileNotFoundError:
         return ''
     return ' ' + ' '.join(flags) if flags else ''
@@ -95,21 +94,17 @@ def makeCommand(activeFile: str, cwd: str, flags: str):
     fileName = os.path.splitext(os.path.basename(activeFile))[0]
     buildDir = os.path.join(cwd, 'build')
     executePath = os.path.join(buildDir, fileName)
-
     if platform.system().lower().startswith('win'):
         executePath += '.exe'
-
     safeCwd, safeBuildDir, safeSrc, safeExe = shlexSafety(cwd, buildDir, activeFile, executePath)
-    
     compileCommand = f'{compiler} {safeSrc} -o {safeExe}{flags}'
     runCommand = safeExe if platform.system().lower().startswith('win') \
         else f'./{shlex.quote(os.path.relpath(executePath, cwd))}'
-    #detect whether powerdshell is bing used
     is_powershell = 'pwsh' in os.environ.get('SHELL', '').lower() or 'powershell' in os.environ.get('COMSPEC', '').lower() or 'PSModulePath' in os.environ
-    
     if platform.system().lower().startswith('win'):
         if is_powershell:
             mkdir_cmd = f"if (!(Test-Path {safeBuildDir})) {{ mkdir {safeBuildDir} }}"
+            # --% swallows extra args from Code Runner
             fullCommand = f"cd {safeCwd}; {mkdir_cmd}; {compileCommand}; --% {runCommand}"
         else:
             mkdir_cmd = f'if not exist {safeBuildDir} mkdir {safeBuildDir}'
@@ -117,20 +112,15 @@ def makeCommand(activeFile: str, cwd: str, flags: str):
     else:
         mkdir_cmd = f'mkdir -p {safeBuildDir}'
         fullCommand = f'cd {safeCwd} && {mkdir_cmd} && {compileCommand} && {runCommand}'
-    
     return compileCommand, runCommand, fullCommand
 
 args = parseArgs()
-
 activeFile = os.path.abspath(os.path.expanduser(args.file))
 cwd = os.path.abspath(os.path.expanduser(args.cwd))
-
 if not os.path.exists(activeFile):
     print(f'ERROR: file not found: {activeFile}', file=sys.stderr); sys.exit(2)
 if not os.path.isdir(cwd):
     print(f'ERROR: cwd not a directory: {cwd}', file=sys.stderr); sys.exit(2)
-
 flags = findDependencies(activeFile)
 compileCmd, runCmd, fullCmd = makeCommand(activeFile, cwd, flags)
-
 print(json.dumps({"compile": compileCmd, "run": runCmd, "full": fullCmd}))
