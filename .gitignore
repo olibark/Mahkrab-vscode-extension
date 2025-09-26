@@ -31,4 +31,4 @@ Thumbs.db__pycache__/
 .idea/
 Shooter/Shooter.zip
 *.vsix
-settings.json
+.vscode/settings.json
