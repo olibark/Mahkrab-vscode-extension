@@ -104,10 +104,16 @@ def makeCommand(activeFile: str, cwd: str, flags: str):
     compileCommand = f'{compiler} {safeSrc} -o {safeExe}{flags}'
     runCommand = safeExe if platform.system().lower().startswith('win') \
         else f'./{shlex.quote(os.path.relpath(executePath, cwd))}'
-        
+    #detect whether powerdshell is bing used
+    is_powershell = 'pwsh' in os.environ.get('SHELL', '').lower() or 'powershell' in os.environ.get('COMSPEC', '').lower() or 'PSModulePath' in os.environ
+    
     if platform.system().lower().startswith('win'):
-        mkdir_cmd = f'if not exist {safeBuildDir} mkdir {safeBuildDir}'
-        fullCommand = f'cd {safeCwd} && {mkdir_cmd} && {compileCommand} && {runCommand}'
+        if is_powershell:
+            mkdir_cmd = f"if (!(Test-Path {safeBuildDir})) {{ mkdir {safeBuildDir} }}"
+            fullCommand = f"cd {safeCwd}; {mkdir_cmd}; {compileCommand}; {runCommand}"
+        else:
+            mkdir_cmd = f'if not exist {safeBuildDir} mkdir {safeBuildDir}'
+            fullCommand = f'cd {safeCwd} && {mkdir_cmd} && {compileCommand} && {runCommand}'
     else:
         mkdir_cmd = f'mkdir -p {safeBuildDir}'
         fullCommand = f'cd {safeCwd} && {mkdir_cmd} && {compileCommand} && {runCommand}'
