@@ -5,7 +5,7 @@ const path = require('path');
 
 function activate(context) {
   console.log("MahkrabMaker activated");
-  // Reconfigures when focus is switched to a C file
+  //reconfigures when focus is switched to a C file
   context.subscriptions.push(
     vscode.window.onDidChangeActiveTextEditor(activeFile => {
       if (isC(activeFile?.document)) { // uses isC function to fdind whether current file is c
@@ -15,7 +15,7 @@ function activate(context) {
     })
   );
 
-  // Reconfigure when saving a cfile to local
+  //reconfigure when saving a cfile to local
   context.subscriptions.push(
     vscode.workspace.onDidSaveTextDocument(doc => {
       if (isC(doc)) {
@@ -25,7 +25,7 @@ function activate(context) {
     })
   );
 
-  // Configure immediately if the current editor is a C file
+  //configure immediately if the current editor is a C file
   if (isC(vscode.window.activeTextEditor?.document)) {
     console.log("MahkrabMaker: initial configure on activation (C file already active)");
     void configure();
